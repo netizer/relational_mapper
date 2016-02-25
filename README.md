@@ -2,6 +2,10 @@
 
 A relational mapper in Clojure. If you're using relational database in Clojure then this library is for you.
 
+## Leiningen Coordinates
+
+[![Clojars Project](http://clojars.org/netizer/relational_mapper/latest-version.svg)](http://clojars.org/netizer/relational_mapper)
+
 ## Usage
 
 Make calls like:
