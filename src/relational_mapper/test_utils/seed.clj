@@ -44,5 +44,5 @@
                      (files-data "File 2 (Attachment 2)", attachment2-id))))
 
 (defn db-seed [db-state]
-  (database/delete-all db-state (doall (keys (:data-model db-state))))
+  (database/delete-all db-state (doall (keys (:fields db-state))))
   (db-add-data db-state))

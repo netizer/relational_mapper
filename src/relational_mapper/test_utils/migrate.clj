@@ -38,8 +38,8 @@
 
 (defn db-migrate-table [db-state table-name]
   (db-table-reset (:config db-state) table-name)
-  (db-create-table (:config db-state) table-name (into [] (db-data-types (db-state :data-model) table-name))))
+  (db-create-table (:config db-state) table-name (into [] (db-data-types (:fields db-state) table-name))))
 
-(defn db-migrate [db-state data-model]
-  (doall (map #(db-migrate-table db-state %) (keys data-model))))
+(defn db-migrate [db-state]
+  (doall (map #(db-migrate-table db-state %) (keys (:fields db-state)))))
 

@@ -20,5 +20,5 @@
 (defn db-data-type-field [[field-name field-definition]]
   [field-name (db-data-type field-definition)])
 
-(defn db-data-types [data-model resource]
-  (map db-data-type-field (-> data-model resource :fields not-virtual-fields)))
+(defn db-data-types [fields resource]
+  (map db-data-type-field (-> fields resource not-virtual-fields)))

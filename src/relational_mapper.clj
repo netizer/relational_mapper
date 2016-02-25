@@ -61,8 +61,8 @@
   ([relations resource db-state]
     (expand-relations relations resource db-state nil))
   ([relations resource db-state initial-through-relation]
-    (let [data-model (:data-model db-state)
-          resource-relations-data (-> data-model resource :relations)
+    (let [data-model (:associations db-state)
+          resource-relations-data (-> data-model resource)
           direct-relations-data (select-relations-data resource-relations-data relations direct-relation?)
           through-relations-data (select-relations-data resource-relations-data relations through-relation?)
           definition-from-direct-relations (expand-direct-relations resource resource-relations-data direct-relations-data through-relations-data initial-through-relation)

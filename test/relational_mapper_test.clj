@@ -5,26 +5,27 @@
             [relational-mapper.test-utils.migrate :refer [db-migrate]]
             [relational-mapper.test-utils.seed :refer [db-seed]]))
 
-(def data-model {
-           :users {:fields {:first_name {:type :string}
-                            :last_name {:type :string}}
-                   :relations {:posts :has-many
-                               :attachments [:through :posts :has-many]
-                               :files [:through :posts :has-many]}}
-           :posts {:fields {:title {:type :string}
-                            :body {:type :text}
-                            :users_id {:type :integer}}
-                   :relations {:users :belongs-to
-                               :attachments :has-many
-                               :files [:through :attachments :has-many]}}
-           :attachments {:fields {:name {:type :string}
-                                  :posts_id {:type :integer}}
-                         :relations {:users [:through :posts :belongs-to]
-                                     :posts :belongs-to
-                                     :files :has-one}}
-           :files {:fields {:name {:type :string}
-                            :attachments_id {:type :integer}}
-                   :relations {:attachments :belongs-to}}})
+(def associations {:users {:posts :has-many
+                           :attachments [:through :posts :has-many]
+                           :files [:through :posts :has-many]}
+                   :posts {:users :belongs-to
+                           :attachments :has-many
+                           :files [:through :attachments :has-many]}
+                   :attachments {:users [:through :posts :belongs-to]
+                                 :posts :belongs-to
+                                 :files :has-one}
+                   :files {:attachments :belongs-to}})
+
+
+(def fields {:users {:first_name {:type :string}
+                     :last_name {:type :string}}
+             :posts {:title {:type :string}
+                     :body {:type :text}
+                     :users_id {:type :integer}}
+             :attachments {:name {:type :string}
+                           :posts_id {:type :integer}}
+             :files {:name {:type :string}
+                     :attachments_id {:type :integer}}})
 
 (def db-config
   {:classname "org.postgresql.Driver"
@@ -38,7 +39,8 @@
    :db-created false
    :db-migrated false
    :db-seeded false
-   :data-model data-model})
+   :associations associations
+   :fields fields})
 
 (log/start!)
 
@@ -53,7 +55,7 @@
   (assoc db-state :db-created true))
 
 (defn migrate-database [db-state]
-  (db-migrate db-state data-model)
+  (db-migrate db-state)
   (assoc db-state :db-migrated true))
 
 (defn seed-database [db-state]
