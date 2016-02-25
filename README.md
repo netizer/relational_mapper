@@ -1,4 +1,4 @@
-# relational_mapper
+# Relational Mapper
 
 A relational mapper in Clojure. If you're using relational database in Clojure then this library is for you.
 
