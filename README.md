@@ -1,6 +1,6 @@
 # relational_mapper
 
-A relational mapper in Clojure. If you're using relational database in clojure then this library is for you.
+A relational mapper in Clojure. If you're using relational database in Clojure then this library is for you.
 
 ## Usage
 
@@ -18,7 +18,7 @@ and get results like:
              :attachments [{:name "rudolf.png" :id 100 :posts_id 1}
                            {:name "santa.png" :id 101 :posts_id 1}]
 
-to achieve that though you have to first tell relational_mapper what's the structure of your data and how to connect to the database, so the full, working example would look like this:
+to achieve that though you have to first tell 'relational_mapper' what's the structure of your data and how to connect to the database, so the full, working example would look like this:
 
     (def associations {:authors {:posts :has-many
                                  :attachments [:through :posts :has-many]}
@@ -33,11 +33,14 @@ to achieve that though you have to first tell relational_mapper what's the struc
                     :user "postgres-user"
                     :password "postgres-password"})
 
+    (def db-state {:config db-config
+                   :associations associations)
+
     (find_all db-state :posts #{:authors :attachments} [:= post.id 1])
 
 ## How to define associations
 
-'relational_mapper' uses the same relations naming as 'Ruby On Rails`' ActiveRecord, which means:
+'relational_mapper' uses the same relations naming as 'Ruby On Rails`' 'ActiveRecord', which means:
 
 * `posts` `has-many` `attachments` means that `attachments` has `posts_id` column that refers to `id` column of `posts` table and there might be more than one  attachment for one user (hence in response of `find_all` function, `attachments` is an array of hashes)
 
@@ -49,11 +52,11 @@ to achieve that though you have to first tell relational_mapper what's the struc
 
 Have in mind that unlike ActiveRecord here associations are always plural (`:posts {:authors :belongs-to}` and not `:posts {:author :belongs-to`). The same applies to key names (`users_id`, not `user_id`). This is by design, and it's not likely to change.
 
-Also, unlike ActiveRecord here you can define `through` association referring to `belongs-to` association (the lack of this feature in ActiveRecord is described for example here: https://www.ruby-forum.com/topic/74219)
+Also, unlike 'ActiveRecord' here you can define `through` association referring to `belongs-to` association (the lack of this feature in 'ActiveRecord' is described for example here: https://www.ruby-forum.com/topic/74219)
 
 ## Dependencies
 
-relational_mapper uses honeysql for defining sql conditions
+'relational_mapper' uses [Honey SQL](https://github.com/jkk/honeysql) for defining SQL conditions.
 
 ## TODO
 
@@ -61,7 +64,7 @@ relational_mapper uses honeysql for defining sql conditions
 
 * make is possible to define associations with different names than tables, which would make it possible to use databases with parent-child relations or multiple relations to the same table (e.g. 'author', 'publisher' might both refer to table 'users'),
 
-* improve performance (right now a database call is made per each requested table, while in some cases only one call could be made)
+* improve performance (right now a database call is made per each requested table, while in some cases only one call could be made).
 
 ## License
 
