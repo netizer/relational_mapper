@@ -1,4 +1,4 @@
-(defproject netizer/relational_mapper "0.1.0"
+(defproject netizer/relational_mapper "0.2.0"
   :description "Functional-Relational Mapper for Clojure"
   :url "http://github.com/netizer/relational_mapper"
   :license {:name "MIT"
