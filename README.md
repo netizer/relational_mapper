@@ -46,7 +46,7 @@ to achieve that though you have to first tell 'relational_mapper' what's the str
 
 'relational_mapper' uses the same relations naming as 'Ruby On Rails`' 'ActiveRecord', which means:
 
-* `posts` `has-many` `attachments` means that `attachments` has `posts_id` column that refers to `id` column of `posts` table and there might be more than one  attachment for one user (hence in response of `find_all` function, `attachments` is an array of hashes)
+* `posts` `has-many` `attachments` means that `attachments` has `posts_id` column that refers to `id` column of `posts` table and there might be more than one  attachment for one user (hence in response of `find-all` function, `attachments` is an array of hashes)
 
 * `attachments` `has-one` `file` means that `file` has `attachments_id` column that refers to `id` column in `attachments` table. There can be only one file per attachment though (so `find-all` will return `files` as a hash and not an array)
 
