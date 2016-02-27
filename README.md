@@ -10,7 +10,7 @@ A relational mapper in Clojure. If you're using relational database in Clojure t
 
 Make calls like:
 
-    (find_all db-state :posts #{:authors :attachments} [:= post.id 1])
+    (find-all db-state :posts #{:authors :attachments} [:= post.id 1])
 
 and get results like:
 
