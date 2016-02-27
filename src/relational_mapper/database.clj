@@ -2,22 +2,17 @@
   (:require [clojure.string :as string]
             [clojure.java.jdbc :as j]
             [honeysql.core :as hsql]
-            [honeysql.helpers :as h]
-            [onelog.core :as log]
-            [clansi.core :as ansi]))
+            [honeysql.helpers :as h]))
 
 (defn db-query [db-state sql]
   (let [formatted-sql (hsql/format sql)]
-    (log/info (str "SQL Query: " (ansi/style formatted-sql :yellow)))
     (j/query (:config db-state) formatted-sql)))
 
 (defn db-insert [db-state table params]
-  (log/info (str "SQL Insert: " (ansi/style (str table ": " params) :yellow)))
   (j/insert! (:config db-state) table params))
 
 (defn db-execute [db-state sql]
   (let [formatted-sql (hsql/format sql)]
-    (log/info (str "SQL Exec: " (ansi/style formatted-sql :yellow)))
     (j/execute! (:config db-state) formatted-sql)))
 
 (defn sql-all [table condition]

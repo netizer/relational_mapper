@@ -6,5 +6,4 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [honeysql "0.6.1"]
                  [org.clojure/java.jdbc "0.4.1"]
-                 [org.postgresql/postgresql "9.2-1002-jdbc4"]
-                 [onelog "0.4.5"]])
+                 [org.postgresql/postgresql "9.2-1002-jdbc4"]])

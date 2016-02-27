@@ -1,6 +1,5 @@
 (ns relational-mapper-test
   (:require [clojure.test :refer :all]
-            [onelog.core :as log]
             [relational-mapper :refer :all]
             [relational-mapper.test-utils.migrate :refer [db-migrate]]
             [relational-mapper.test-utils.seed :refer [db-seed]]))
@@ -41,8 +40,6 @@
    :db-seeded false
    :associations associations
    :fields fields})
-
-(log/start!)
 
 (defn create-database [db-state]
   "I assume the database is already created:
