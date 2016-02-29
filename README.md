@@ -70,6 +70,8 @@ Also, unlike 'ActiveRecord' here you can define `through` association referring 
 
 * improve performance (right now a database call is made per each requested table, while in some cases only one call could be made).
 
+* consider posibility of result having a deeper structure (result might be array of :posts with :authors and :attachments but then each attachment can have data from :files included)
+
 ## License
 
 Copyright © 2016 Krzysztof Herod
