@@ -4,7 +4,7 @@ A relational mapper in Clojure. If you're using relational database in Clojure t
 
 ## Leiningen Coordinates
 
-[![Clojars Project](http://clojars.org/netizer/relational_mapper/latest-version.svg)](http://clojars.org/netizer/relational_mapper)
+[![Clojars Project](http://clojars.org/netizer/relational-mapper/latest-version.svg)](http://clojars.org/netizer/relational-mapper)
 
 ## Usage
 
@@ -22,7 +22,7 @@ and get results like:
              :attachments [{:name "rudolf.png" :id 100 :posts_id 1}
                            {:name "santa.png" :id 101 :posts_id 1}]
 
-to achieve that though you have to first tell 'relational_mapper' what's the structure of your data and how to connect to the database, so the full, working example would look like this:
+to achieve that though you have to first tell 'relational-mapper' what's the structure of your data and how to connect to the database, so the full, working example would look like this:
 
     (def associations {:authors {:posts :has-many
                                  :attachments [:through :posts :has-many]}
@@ -40,11 +40,11 @@ to achieve that though you have to first tell 'relational_mapper' what's the str
     (def db-state {:config db-config
                    :associations associations)
 
-    (find_all db-state :posts #{:authors :attachments} [:= post.id 1])
+    (find-all db-state :posts #{:authors :attachments} [:= post.id 1])
 
 ## How to define associations
 
-'relational_mapper' uses the same relations naming as 'Ruby On Rails`' 'ActiveRecord', which means:
+'relational-mapper' uses the same relations naming as 'Ruby On Rails`' 'ActiveRecord', which means:
 
 * `posts` `has-many` `attachments` means that `attachments` has `posts_id` column that refers to `id` column of `posts` table and there might be more than one  attachment for one user (hence in response of `find-all` function, `attachments` is an array of hashes)
 
@@ -60,7 +60,7 @@ Also, unlike 'ActiveRecord' here you can define `through` association referring 
 
 ## Dependencies
 
-'relational_mapper' uses [Honey SQL](https://github.com/jkk/honeysql) for defining SQL conditions.
+'relational-mapper' uses [Honey SQL](https://github.com/jkk/honeysql) for defining SQL conditions.
 
 ## TODO
 
