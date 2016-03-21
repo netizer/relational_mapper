@@ -24,12 +24,12 @@ and get results like:
 
 to achieve that though you have to first tell 'relational-mapper' what's the structure of your data and how to connect to the database, so the full, working example would look like this:
 
-    (def associations {:authors {:posts :has-many
-                                 :attachments [:through :posts :has-many]}
-                       :posts {:authors :belongs-to
-                               :attachments :has-many}
-                       :attachments {:authors [:through :posts :belongs-to]
-                                     :posts :belongs-to}})
+    (def associations {:authors {:posts {:type :has-many}
+                                 :attachments {:type :has-many :through :posts}}
+                       :posts {:authors {:type :belongs-to}
+                               :attachments (:type :has-many}}
+                       :attachments {:authors {:type :belongs-to :through :posts}
+                                     :posts {:type :belongs-to}}})
 
     (def db-config {:classname "org.postgresql.Driver"
                     :subprotocol "postgresql"

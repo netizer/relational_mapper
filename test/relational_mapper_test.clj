@@ -4,17 +4,18 @@
             [relational-mapper.test-utils.migrate :refer [db-migrate]]
             [relational-mapper.test-utils.seed :refer [db-seed]]))
 
-(def associations {:users {:posts :has-many
-                           :attachments [:through :posts :has-many]
-                           :files [:through :posts :has-many]}
-                   :posts {:users :belongs-to
-                           :attachments :has-many
-                           :files [:through :attachments :has-many]}
-                   :attachments {:users [:through :posts :belongs-to]
-                                 :posts :belongs-to
-                                 :files :has-one}
-                   :files {:attachments :belongs-to}})
 
+
+(def associations {:users {:posts {:type :has-many}
+                           :attachments {:type :has-many :through :posts}
+                           :files {:type :has-many :through :posts}}
+                   :posts {:users {:type :belongs-to}
+                           :attachments {:type :has-many}
+                           :files {:type :has-many :through :attachments}}
+                   :attachments {:users {:type :belongs-to :through :posts}
+                                 :posts {:type :belongs-to}
+                                 :files {:type :has-one}}
+                   :files {:attachments {:type :belongs-to}}})
 
 (def fields {:users {:first_name {:type :string}
                      :last_name {:type :string}}

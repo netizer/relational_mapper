@@ -16,22 +16,28 @@
   ([relation other-relation sufix]
     (keyword (str (name relation) "." (name other-relation) sufix))))
 
-(defn- through-relation? [relation-type]
-  (vector? relation-type))
+(defn- through-relation? [relation-options]
+  (:through relation-options))
 
-(defn- direct-relation? [relation-type]
-  (not (through-relation? relation-type)))
+(defn- direct-relation? [relation-options]
+  (not (through-relation? relation-options)))
 
-(defn- through-subject [[-relation-key expanded-relation]]
-  (second expanded-relation))
+(defn- referring-relation? [relation-options]
+  (= :belongs-to (:type relation-options)))
 
-(defn- build-relation-definition [resource [relation relation-type] initial-through-relation]
-  (let [initial-through-type (last initial-through-relation)
-        local-key (= :belongs-to relation-type)
+(defn- collection-association? [relation-options initial-through-type]
+  (or (= :has-many (:type relation-options))
+      (= :has-many (:type initial-through-type))))
+
+(defn- through-subject [[-relation-key relation-options]]
+  (:through relation-options))
+
+(defn- build-relation-definition [resource [relation relation-options] initial-through-relation]
+  (let [initial-through-type (:through initial-through-relation)
+        local-key (referring-relation? relation-options)
         resource-key (if local-key (str (name relation) "_id") "id")
-        relation-key (if local-key "id" (str (name resource) "_id"))
-        collection-association? (or (= :has-many relation-type) (= :has-many initial-through-type))]
-    {:relation-type relation-type
+        relation-key (if local-key "id" (str (name resource) "_id"))]
+    {:relation-options relation-options
      :initial-through-type initial-through-type
      :known {:resource resource
              :id (keyword resource-key)
@@ -39,7 +45,7 @@
      :being-added {:resource relation
                    :id (keyword relation-key)
                    :qualified-id (qualify relation relation-key)}
-     :collection-association? collection-association?}))
+     :collection-association? (collection-association? relation-options initial-through-relation)}))
 
 (defn- select-relations-data [all-relations-data relations selector]
   (let [filtered-relations-keys (into {} (filter #(selector (second %)) all-relations-data))]
@@ -54,7 +60,7 @@
 (declare expand-relations)
 
 (defn- expand-through-relations [db-state initial-through-relation through-relations-data]
-  (let [definition-from-through-relations (map #(expand-relations #{(first %)} (second (second %)) db-state (or initial-through-relation (second %))) through-relations-data)]
+  (let [definition-from-through-relations (map #(expand-relations #{(first %)} (:through (second %)) db-state (or initial-through-relation (second %))) through-relations-data)]
     (apply merge definition-from-through-relations)))
 
 (defn- expand-relations
