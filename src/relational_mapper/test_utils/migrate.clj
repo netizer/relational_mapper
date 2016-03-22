@@ -1,6 +1,6 @@
 (ns relational-mapper.test-utils.migrate
   (:require [clojure.java.jdbc :as sql]
-            [relational-mapper.model-processing :refer :all]))
+            [relational-mapper.data-model :refer :all]))
 
 ;; ********************************************************************
 ;; database manipulation functions
@@ -38,8 +38,8 @@
 
 (defn db-migrate-table [db-state table-name]
   (db-table-reset (:config db-state) table-name)
-  (db-create-table (:config db-state) table-name (into [] (db-data-types (:fields db-state) table-name))))
+  (db-create-table (:config db-state) table-name (into [] (db-data-types (:data-model db-state) table-name))))
 
 (defn db-migrate [db-state]
-  (doall (map #(db-migrate-table db-state %) (keys (:fields db-state)))))
+  (doall (map #(db-migrate-table db-state %) (keys (:data-model db-state)))))
 

@@ -1,7 +1,7 @@
 (ns relational-mapper.test-utils.seed
   (:require [clojure.pprint :as pprint]
             [relational-mapper.database :as database]
-            [relational-mapper.model-processing :refer :all]))
+            [relational-mapper.data-model :refer :all]))
 
 (defn sql-date [year month day]
   (java.sql.Date. (- year 1900) month day))
@@ -44,5 +44,5 @@
                      (files-data "File 2 (Attachment 2)", attachment2-id))))
 
 (defn db-seed [db-state]
-  (database/delete-all db-state (doall (keys (:fields db-state))))
+  (database/delete-all db-state (doall (keys (:data-model db-state))))
   (db-add-data db-state))

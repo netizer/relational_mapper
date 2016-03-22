@@ -1,7 +1,8 @@
 (ns relational-mapper
   (:require [honeysql.helpers :as h]
             [honeysql.core :as hsql]
-            [clojure.java.jdbc :as j]))
+            [clojure.java.jdbc :as j]
+            [relational-mapper.data-model :refer :all]))
 
 (defn- db-query [db-config sql]
   (let [formatted-sql (hsql/format sql)]
@@ -67,8 +68,8 @@
   ([relations resource db-state]
     (expand-relations relations resource db-state nil))
   ([relations resource db-state initial-through-relation]
-    (let [data-model (:associations db-state)
-          resource-relations-data (-> data-model resource)
+    (let [data-model (:data-model db-state)
+          resource-relations-data (-> data-model resource :associations)
           direct-relations-data (select-relations-data resource-relations-data relations direct-relation?)
           through-relations-data (select-relations-data resource-relations-data relations through-relation?)
           definition-from-direct-relations (expand-direct-relations resource resource-relations-data direct-relations-data through-relations-data initial-through-relation)

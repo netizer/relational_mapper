@@ -2,9 +2,8 @@
   (:require [clojure.test :refer :all]
             [relational-mapper :refer :all]
             [relational-mapper.test-utils.migrate :refer [db-migrate]]
-            [relational-mapper.test-utils.seed :refer [db-seed]]))
-
-
+            [relational-mapper.test-utils.seed :refer [db-seed]]
+            [relational-mapper.data-model :as data-model]))
 
 (def associations {:users {:posts {:type :has-many}
                            :attachments {:type :has-many :through :posts}
@@ -39,8 +38,12 @@
    :db-created false
    :db-migrated false
    :db-seeded false
-   :associations associations
-   :fields fields})
+   :data-model {}})
+
+(defn create-model [db-state]
+  (-> db-state
+    (data-model/set-associations associations)
+    (data-model/set-fields fields)))
 
 (defn create-database [db-state]
   "I assume the database is already created:
@@ -57,12 +60,12 @@
   (assoc db-state :db-migrated true))
 
 (defn seed-database [db-state]
-  "TODO: add some initial data"
   (db-seed db-state)
   (assoc db-state :db-seeded true))
 
 (defn setup-database [db-state]
   (-> db-state
+      create-model
       create-database
       migrate-database
       seed-database))
