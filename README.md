@@ -24,12 +24,12 @@ and get results like:
 
 to achieve that though you have to first tell 'relational-mapper' what's the structure of your data and how to connect to the database, so the full, working example would look like this:
 
-    (def associations {:authors {:posts {:type :has-many}
-                                 :attachments {:type :has-many :through :posts}}
-                       :posts {:authors {:type :belongs-to}
-                               :attachments (:type :has-many}}
-                       :attachments {:authors {:type :belongs-to :through :posts}
-                                     :posts {:type :belongs-to}}})
+    (def data-model {:authors {:associations {:posts {:type :has-many}
+                                              :attachments {:type :has-many :through :posts}}}
+                     :posts {:associations {:authors {:type :belongs-to}
+                                            :attachments {:type :has-many}}}
+                     :attachments {:associations {:authors {:type :belongs-to :through :posts}
+                                                  :posts {:type :belongs-to}}}})
 
     (def db-config {:classname "org.postgresql.Driver"
                     :subprotocol "postgresql"
@@ -38,7 +38,7 @@ to achieve that though you have to first tell 'relational-mapper' what's the str
                     :password "postgres-password"})
 
     (def db-state {:config db-config
-                   :associations associations)
+                   :data-model data-model)
 
     (find-all db-state :posts #{:authors :attachments} [:= post.id 1])
 
