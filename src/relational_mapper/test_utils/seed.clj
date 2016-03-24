@@ -13,7 +13,7 @@
 (defn posts-data [title, user-id]
   {:title title
    :body "body"
-   :users_id user-id})
+   :authors_id user-id})
 
 (defn attachments-data [name, post-id]
   {:name name

@@ -5,13 +5,13 @@
             [relational-mapper.test-utils.seed :refer [db-seed]]
             [relational-mapper.data-model :as data-model]))
 
-(def associations {:users {:posts {:type :has-many}
+(def associations {:users {:posts {:type :has-many :inverse-of :authors}
                            :attachments {:type :has-many :through :posts}
                            :files {:type :has-many :through :posts}}
-                   :posts {:users {:type :belongs-to}
+                   :posts {:authors {:type :belongs-to :model :users}
                            :attachments {:type :has-many}
                            :files {:type :has-many :through :attachments}}
-                   :attachments {:users {:type :belongs-to :through :posts}
+                   :attachments {:authors {:type :belongs-to :through :posts}
                                  :posts {:type :belongs-to}
                                  :files {:type :has-one}}
                    :files {:attachments {:type :belongs-to}}})
@@ -20,7 +20,7 @@
                      :last_name {:type :string}}
              :posts {:title {:type :string}
                      :body {:type :text}
-                     :users_id {:type :integer}}
+                     :authors_id {:type :integer}}
              :attachments {:name {:type :string}
                            :posts_id {:type :integer}}
              :files {:name {:type :string}
@@ -80,10 +80,10 @@
                (is (= (-> response first :posts second :title) "Post 2"))))))
 
 (deftest find-all-with-belongs-to-association
-  (let [response (find-all db-state :posts #{:users} [[:= :posts.title "Post 1"]])]
+  (let [response (find-all db-state :posts #{:authors} [[:= :posts.title "Post 1"]])]
         (testing "returns record with associated record as a hash"
           (and (is (= (-> response first :title) "Post 1"))
-               (is (= (-> response first :users :first_name) "John"))))))
+               (is (= (-> response first :authors :first_name) "John"))))))
 
 (deftest find-all-with-has-many-through-association
   (let [response (find-all db-state :users #{:attachments} [[:= :users.first_name "John"]])]
@@ -95,10 +95,10 @@
           (is (= (-> response first :posts first :title) "Post 1")))))
 
 (deftest find-all-with-belongs-to-through-association
-  (let [response (find-all db-state :attachments #{:users} [[:= :attachments.name "Attachment 1 (Post 1, John)"]])]
+  (let [response (find-all db-state :attachments #{:authors} [[:= :attachments.name "Attachment 1 (Post 1, John)"]])]
         (testing "returns record with associated record as a hash"
           (and (is (= (-> response first :name) "Attachment 1 (Post 1, John)"))
-               (is (= (-> response first :users :first_name) "John"))))
+               (is (= (-> response first :authors :first_name) "John"))))
         (testing "includes intermediate association record as a hash"
           (is (= (-> response first :posts :title) "Post 1")))))
 

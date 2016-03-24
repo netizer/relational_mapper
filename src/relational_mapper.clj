@@ -36,16 +36,19 @@
 (defn- build-relation-definition [resource [relation relation-options] initial-through-relation]
   (let [initial-through-type (:through initial-through-relation)
         local-key (referring-relation? relation-options)
-        resource-key (if local-key (str (name relation) "_id") "id")
-        relation-key (if local-key "id" (str (name resource) "_id"))]
+        resource-key (:subject-key relation-options)
+        relation-key (:object-key relation-options)
+        table-name (:object-table relation-options)]
     {:relation-options relation-options
      :initial-through-type initial-through-type
      :known {:resource resource
              :id (keyword resource-key)
              :qualified-id (qualify resource resource-key)}
      :being-added {:resource relation
+                   :table table-name
                    :id (keyword relation-key)
-                   :qualified-id (qualify relation relation-key)}
+                   :qualified-aliased-id (qualify relation relation-key)
+                   :qualified-id (qualify table-name relation-key)}
      :collection-association? (collection-association? relation-options initial-through-relation)}))
 
 (defn- select-relations-data [all-relations-data relations selector]
@@ -77,10 +80,12 @@
       (concat definition-from-direct-relations definition-from-through-relations))))
 
 (defn- join-with [query expanded-relation]
-  (let [table (-> expanded-relation :being-added :resource)
+  (let [table (-> expanded-relation :being-added :table)
+        table-alias (-> expanded-relation :being-added :resource)
         local-key (-> expanded-relation :known :qualified-id)
-        remote-key (-> expanded-relation :being-added :qualified-id)]
-    (h/merge-left-join query table [:= local-key remote-key])))
+        remote-key (-> expanded-relation :being-added :qualified-aliased-id)
+        aliased-table (if (= table table-alias) table [table table-alias])]
+    (h/merge-left-join query aliased-table [:= local-key remote-key])))
 
 (defn- conditions? [argument]
   (or (empty? argument)
@@ -134,7 +139,7 @@
   (let [db-config (:config db-state)
         resource-known (-> expanded-relation :known :resource)
         resource-known-id (-> expanded-relation :known :id)
-        resource-being-added (-> expanded-relation :being-added :resource)
+        resource-being-added (-> expanded-relation :being-added :table)
         qualified-resource-being-added-id (-> expanded-relation :being-added :qualified-id)]
     (if (= resource resource-known)
       (collection-with-association-of-resource db-config collection expanded-relation resource resource-known-id resource-being-added qualified-resource-being-added-id)

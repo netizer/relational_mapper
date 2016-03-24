@@ -21,9 +21,17 @@
   (map db-data-type-field (-> fields resource :fields not-virtual-fields)))
 
 (defn association-modifier [resource result association association-data]
-  (let [new-association-data {:type (:type association-data)
-                              :through (:through association-data)}]
-    (assoc result association association-data)))
+  (let [inverse-of (:inverse-of association-data)
+        has-foreign-key (= :belongs-to (:type association-data))
+        object-table (or (:model association-data) association)
+        subject-key (if has-foreign-key (str (name association) "_id") "id")
+        object-key (if has-foreign-key "id" (str (name (or inverse-of resource)) "_id"))
+        new-association-data {:type (:type association-data)
+                              :through (:through association-data)
+                              :subject-key subject-key
+                              :object-key object-key
+                              :object-table object-table}]
+    (assoc result association new-association-data)))
 
 (defn associations-modifier [resource associations]
   (reduce-kv (partial association-modifier resource) {} associations))
