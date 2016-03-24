@@ -20,16 +20,21 @@
 (defn db-data-types [fields resource]
   (map db-data-type-field (-> fields resource :fields not-virtual-fields)))
 
-(defn association-modifier [association]
-  association)
+(defn association-modifier [resource result association association-data]
+  (let [new-association-data {:type (:type association-data)
+                              :through (:through association-data)}]
+    (assoc result association association-data)))
 
-(defn copy-value [v]
+(defn associations-modifier [resource associations]
+  (reduce-kv (partial association-modifier resource) {} associations))
+
+(defn copy-value [_resource v]
   v)
 
-;; runs specific-modifier for each value of the hash for witch
+;; runs specific-modifier for each value of the hash for which
 ;; this function was run
 (defn hash-modifier [specific-modifier new-key db-state k v]
-  (assoc-in db-state [:data-model k new-key] (specific-modifier v)))
+  (assoc-in db-state [:data-model k new-key] (specific-modifier k v)))
 
 (defn update-for-model [db-state data new-key modifier]
   (reduce-kv (partial modifier new-key) db-state data))
@@ -38,4 +43,4 @@
   (update-for-model db-state fields :fields (partial hash-modifier copy-value)))
 
 (defn set-associations [db-state associations]
-  (update-for-model db-state associations :associations (partial hash-modifier association-modifier)))
+  (update-for-model db-state associations :associations (partial hash-modifier associations-modifier)))
