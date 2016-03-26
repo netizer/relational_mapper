@@ -42,7 +42,7 @@
 
 (defn create-model [db-state]
   (-> db-state
-    (data-model/set-associations associations)
+    (data-model/set-associations associations {})
     (data-model/set-fields fields)))
 
 (defn create-database [db-state]
@@ -87,7 +87,7 @@
 
 (deftest find-all-with-has-many-through-association
   (let [response (find-all db-state :users #{:attachments} [[:= :users.first_name "John"]])]
-        (testing "returns record with associated record as an array of hashes"
+        (testing "returns record with associated records as an array of hashes"
           (and (is (= (-> response first :first_name) "John"))
                (is (= (-> response first :attachments first :name) "Attachment 1 (Post 1, John)"))
                (is (= (count (-> response first :attachments)) 1))))
@@ -110,7 +110,7 @@
 
 (deftest find-all-with-embedded-through-association
   (let [response (find-all db-state :users #{:files} [[:= :users.first_name "John"]])]
-        (testing "returns record with associated record as an array of hashes"
+        (testing "returns record with associated records as an array of hashes"
           (and (is (= (-> response first :first_name) "John"))
                (is (= (-> response first :files first :name) "File 1 (Attachment 1)"))
                (is (= (count (-> response first :attachments)) 1))))
