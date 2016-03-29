@@ -76,14 +76,6 @@ Sometimes you need to set an association that is named differently than the targ
 
 By default keys of tables are assumed to be called `id` and foreign keys are assumed to match the format `association_id` (so, for example foreign key for table `users` is called `users_id`). If you want to change that, you can define key patterns in last attribute of the function `set-associations`, for example:
 
-    (defn foreign-key-generator [model]
-        (str model "_key"))
-
-    (defn create-model-with-uncommon-keys [db-state]
-      (-> db-state
-        (data-model/set-associations associations {:foreign-key-format foreign-key-generator})
-        (data-model/set-fields fields)))
-
     (def db-state (data-model/set-associations initial-db-state associations {
         :foreign-key-format #(str % "_key")}))
 
