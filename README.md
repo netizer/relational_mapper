@@ -51,7 +51,7 @@ to achieve that though you have to first tell 'relational-mapper' what's the str
 
 ## How to define associations
 
-'relational-mapper' uses the same relations naming as 'Ruby On Rails`' 'ActiveRecord', which means:
+`relational-mapper` uses the same relations naming as 'Ruby On Rails`' 'ActiveRecord', which means:
 
 * `posts` `has-many` `attachments` means that `attachments` has `posts_id` column that refers to `id` column of `posts` table and there might be more than one  attachment for one user (hence in response of `find-all` function, `attachments` is an array of hashes)
 
@@ -67,14 +67,14 @@ Also, unlike 'ActiveRecord', here you can define `through` association referring
 
 ### Different name of an association than a table name
 
-Sometimes you need to set an association that is named differently than the target table name, for example `posts` may have association `authors` which refers to table `users` (or another case: you need associations: `created_by` and `updated_by`). In such case you can use `inverse-of` and `model` in associations hash, for example:
+Sometimes you need to set an association that is named differently than the target table name, for example `posts` may have association `authors` which refers to table `users` (or another case: you need associations: `created_by` and `updated_by`, both referring to the same `users` table). In such case you can use `inverse-of` and `model` in associations hash, e.g.:
 
     (def associations {:users {:posts {:type :has-many :inverse-of :authors}}
                        :posts {:authors {:type :belongs-to :model :users}}})
 
 ### Unusual naming for keys/foreign keys
 
-By default keys of tables are assumed to be called `id` and foreign keys are assumed to match the format `association_id` (so, for example foreign key for table `users` is called `users_id`). If you want to change that, you can define key patterns in last attribute of the function `set-associations`, for example:
+By default keys of tables are assumed to be called `id` and foreign keys are assumed to match the format `association_id` (so, for example foreign key for table `users` is called `users_id`). If you want to change that, you can define key patterns in last attribute of the function `set-associations`, e.g.
 
     (def db-state (data-model/set-associations initial-db-state associations {
         :foreign-key-format #(str % "_key")}))
@@ -83,13 +83,11 @@ With above settings `relational_mapper` will expect foreign keys to match the pa
 
 ## Dependencies
 
-'relational-mapper' uses [Honey SQL](https://github.com/jkk/honeysql) for defining SQL conditions.
+`relational-mapper` uses [Honey SQL](https://github.com/jkk/honeysql) for defining SQL conditions.
 
 ## TODO
 
 * test it with MySQL (I used it only with PostgreSQL, it should work with MySQL too, but I haven't checked that),
-
-* make is possible to define associations with different names than tables, which would make it possible to use databases with parent-child relations or multiple relations to the same table (e.g. 'author', 'publisher' might both refer to table 'users'),
 
 * improve performance (right now a database call is made per each requested table, while in some cases only one call could be made).
 
