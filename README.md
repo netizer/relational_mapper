@@ -6,6 +6,11 @@ A relational mapper in Clojure. If you're using relational database in Clojure t
 
 [![Clojars Project](http://clojars.org/netizer/relational-mapper/latest-version.svg)](http://clojars.org/netizer/relational-mapper)
 
+## Build status
+
+
+[![Continuous Integration status](https://secure.travis-ci.org/netizer/relational_mapper.png)](http://travis-ci.org/netizer/relational_mapper)
+
 ## Usage
 
 Make calls like:
