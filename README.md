@@ -65,14 +65,14 @@ Have in mind that unlike ActiveRecord, here associations are always plural (`:po
 
 Also, unlike 'ActiveRecord', here you can define `through` association referring to `belongs-to` association (the lack of this feature in 'ActiveRecord' is described for example here: https://www.ruby-forum.com/topic/74219)
 
-## Different name of an association than a table name
+### Different name of an association than a table name
 
 Sometimes you need to set an association that is named differently than the target table name, for example `posts` may have association `authors` which refers to table `users` (or another case: you need associations: `created_by` and `updated_by`). In such case you can use `inverse-of` and `model` in associations hash, for example:
 
     (def associations {:users {:posts {:type :has-many :inverse-of :authors}}
                        :posts {:authors {:type :belongs-to :model :users}}})
 
-## Unusual naming for keys/foreign keys
+### Unusual naming for keys/foreign keys
 
 By default keys of tables are assumed to be called `id` and foreign keys are assumed to match the format `association_id` (so, for example foreign key for table `users` is called `users_id`). If you want to change that, you can define key patterns in last attribute of the function `set-associations`, for example:
 
