@@ -14,22 +14,24 @@ A relational mapper in Clojure. If you're using relational database in Clojure t
 ## Usage
 
 Make calls like:
-
-    (find-all db-state :posts #{:authors :attachments} [:= post.id 1])
-
+```clojure
+(find-all db-state :posts #{:authors :attachments} [:= post.id 1])
+```
 and get results like:
-
-    {:posts {:title "Christmas"
-             :body "Merry Christmas!"
-             :id 1
-             :authors_id 10
-             :authors {:name "Rudolf" :id 10}
-             :attachments [{:name "rudolf.png" :id 100 :posts_id 1}
-                           {:name "santa.png" :id 101 :posts_id 1}]
+```clojure
+{:posts 
+    {:title "Christmas"
+     :body "Merry Christmas!"
+     :id 1
+     :authors_id 10
+     :authors {:name "Rudolf" :id 10}
+     :attachments [{:name "rudolf.png" :id 100 :posts_id 1}
+                   {:name "santa.png" :id 101 :posts_id 1}]
+```
 
 to achieve that though you have to first tell 'relational-mapper' what's the structure of your data and how to connect to the database, so the full, working example would look like this:
 
-
+```clojure
     (ns your-project
       (:require [relational-mapper :refer :all]
                 [relational-mapper.data-model :as data-model]))
@@ -53,6 +55,7 @@ to achieve that though you have to first tell 'relational-mapper' what's the str
     (def db-state (data-model/set-associations initial-db-state associations {})
 
     (find-all db-state :posts #{:authors :attachments} [:= post.id 1])
+```
 
 ## How to define associations
 
