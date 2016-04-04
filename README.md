@@ -32,29 +32,29 @@ and get results like:
 to achieve that though you have to first tell 'relational-mapper' what's the structure of your data and how to connect to the database, so the full, working example would look like this:
 
 ```clojure
-    (ns your-project
-      (:require [relational-mapper :refer :all]
-                [relational-mapper.data-model :as data-model]))
+(ns your-project
+  (:require [relational-mapper :refer :all]
+            [relational-mapper.data-model :as data-model]))
 
-    (def associations {:authors {:posts {:type :has-many}
-                                 :attachments {:type :has-many :through :posts}}
-                       :posts {:authors {:type :belongs-to}
-                               :attachments {:type :has-many}}
-                       :attachments {:authors {:type :belongs-to :through :posts}
-                                     :posts {:type :belongs-to}}})
+(def associations {:authors {:posts {:type :has-many}
+                             :attachments {:type :has-many :through :posts}}
+                   :posts {:authors {:type :belongs-to}
+                           :attachments {:type :has-many}}
+                   :attachments {:authors {:type :belongs-to :through :posts}
+                                 :posts {:type :belongs-to}}})
 
-    (def db-config {:classname "org.postgresql.Driver"
-                    :subprotocol "postgresql"
-                    :subname (str "//" "localhost" ":" 5432 "/" "testdb")
-                    :user "postgres-user"
-                    :password "postgres-password"})
+(def db-config {:classname "org.postgresql.Driver"
+                :subprotocol "postgresql"
+                :subname (str "//" "localhost" ":" 5432 "/" "testdb")
+                :user "postgres-user"
+                :password "postgres-password"})
 
-    (def initial-db-state {:config db-config
-                           :data-model {})
+(def initial-db-state {:config db-config
+                       :data-model {})
 
-    (def db-state (data-model/set-associations initial-db-state associations {})
+(def db-state (data-model/set-associations initial-db-state associations {})
 
-    (find-all db-state :posts #{:authors :attachments} [:= post.id 1])
+(find-all db-state :posts #{:authors :attachments} [:= post.id 1])
 ```
 
 ## How to define associations
@@ -77,15 +77,18 @@ Also, unlike 'ActiveRecord', here you can define `through` association referring
 
 Sometimes you need to set an association that is named differently than the target table name, for example `posts` may have association `authors` which refers to table `users` (or another case: you need associations: `created_by` and `updated_by`, both referring to the same `users` table). In such case you can use `inverse-of` and `model` in associations hash, e.g.:
 
-    (def associations {:users {:posts {:type :has-many :inverse-of :authors}}
-                       :posts {:authors {:type :belongs-to :model :users}}})
-
+```clojure
+(def associations {:users {:posts {:type :has-many :inverse-of :authors}}
+                   :posts {:authors {:type :belongs-to :model :users}}})
+```
 ### Unusual naming for keys/foreign keys
 
 By default keys of tables are assumed to be called `id` and foreign keys are assumed to match the format `association_id` (so, for example foreign key for table `users` is called `users_id`). If you want to change that, you can define key patterns in last attribute of the function `set-associations`, e.g.
 
-    (def db-state (data-model/set-associations initial-db-state associations {
-        :foreign-key-format #(str % "_key")}))
+```clojure
+(def db-state (data-model/set-associations initial-db-state associations {
+    :foreign-key-format #(str % "_key")}))
+```
 
 With above settings `relational_mapper` will expect foreign keys to match the pattern `assocation_key`.
 
