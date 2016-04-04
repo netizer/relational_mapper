@@ -24,13 +24,13 @@
   (map db-data-type-field (-> fields resource :fields not-virtual-fields)))
 
 (defn xor [value1 value2]
-  (or (and value1 value2) (and (not value1) (not value2))))
+  (or (and value1 (not value2)) (and (not value1) value2)))
 
 (defn key-maker [base-name association-data options subject?]
   (let [has-foreign-key (= :belongs-to (:type association-data))
         key-name ((:key-format options) base-name)
         foreign-key-name ((:foreign-key-format options) base-name)]
-    (if (xor has-foreign-key subject?) foreign-key-name key-name)))
+    (if (xor has-foreign-key subject?) key-name foreign-key-name)))
 
 (defn subject-key-maker [association association-data options]
   (let [base-name (name association)]
