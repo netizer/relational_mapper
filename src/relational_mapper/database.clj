@@ -18,11 +18,6 @@
 (defn sql-all [table condition]
   (-> (h/select :*) (h/from table) (h/where condition)))
 
-(defn count-by [table field value]
-  (let [query (-> (h/select [:%count.* :cnt]) (h/from table) (h/where [:= field value]))
-        result (db-query query)]
-  (:cnt (first result))))
-
 (defn exist? [table conditions]
   (let [query (reduce #(h/merge-where %1 %2) (-> (h/select :id) (h/from table)) conditions)
         result (db-query query)]
@@ -33,9 +28,6 @@
 
 (defn create [db-state table params]
   (:id (create-and-return-result db-state table params)))
-
-(defn update [table id params]
-  (first (db-execute (-> (h/update table) (h/sset params) (h/where [:= :id id])))))
 
 (defn delete [table conditions]
   (let [query (reduce #(h/merge-where %1 %2) (h/delete-from table) conditions)]
