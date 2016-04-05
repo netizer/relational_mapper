@@ -10,6 +10,8 @@ A relational mapper in Clojure. If you're using relational database in Clojure t
 
 [![Continuous Integration status](http://img.shields.io/travis/netizer/relational_mapper.svg?style=flat-square)](http://travis-ci.org/netizer/relational_mapper)
 
+[![Dependencies Status](https://jarkeeper.com/netizer/relational_mapper/status.svg)](https://jarkeeper.com/netizer/relational_mapper)
+
 ## Usage
 
 Make calls like:
