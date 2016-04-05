@@ -4,12 +4,11 @@ A relational mapper in Clojure. If you're using relational database in Clojure t
 
 ## Leiningen Coordinates
 
-[![Clojars Project](http://clojars.org/netizer/relational-mapper/latest-version.svg)](http://clojars.org/netizer/relational-mapper)
+[![Clojars Project](https://img.shields.io/clojars/v/netizer/relational-mapper.svg?style=flat-square)](http://clojars.org/netizer/relational-mapper)
 
-## Build status
+## Project health
 
-
-[![Continuous Integration status](https://secure.travis-ci.org/netizer/relational_mapper.png)](http://travis-ci.org/netizer/relational_mapper)
+[![Continuous Integration status](http://img.shields.io/travis/netizer/relational_mapper.svg?style=flat-square)](http://travis-ci.org/netizer/relational_mapper)
 
 ## Usage
 
