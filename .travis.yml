@@ -8,3 +8,5 @@ before_script:
 notifications:
   recipients:
     - krzysiek.herod@gmail.com
+jdk:
+  - oraclejdk8
