@@ -19,11 +19,9 @@
       (sql/drop-table-ddl table)))
 
 (defn db-create-table [db-config table columns]
-  (let [default-columns [[:id "SERIAL" :primary :key]]
-        all-columns (concat default-columns columns)
-        arguments (concat [table] all-columns)]
+  (let [arguments (conj columns [:id "SERIAL" :primary :key])]
     (sql/db-do-commands db-config
-      (apply sql/create-table-ddl arguments))))
+      (sql/create-table-ddl table arguments))))
 
 ;; ********************************************************************
 ;; migration functions
